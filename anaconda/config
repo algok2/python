@@ -9,7 +9,7 @@ conda config --set ssl_verify False
 #jupyter
 jupyter notebook --notebookk-dir="%CD%"
 from IPython.core.display import display, HTML
-display(HTML("<style>.container { width:100% !important; }</style>")
+display(HTML("<style>.container { width:100% !important; }</style>"))
 
 - how to set Chrome as a default browser for jupyter
   step 1: generate config file

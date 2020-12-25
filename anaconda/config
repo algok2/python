@@ -1,0 +1,26 @@
+conda install selenium --channel conda-forge 
+conda install beautifulsoup4 --channel anaconda 
+conda config --add channels conda-forge
+conda config --add channels anaconda 
+conda config --set proxy_servers.http://xxx.xxx.xxx.xxx:xxxx
+conda config --set proxy_servers.https://xxx.xxx.xxx.xxx:xxxx
+conda config --set ssl_verify False
+
+#jupyter
+jupyter notebook --notebookk-dir="%CD%"
+from IPython.core.display import display, HTML
+display(HTML("<style>.container { width:100% !important; }</style>")
+
+- how to set Chrome as a default browser for jupyter
+  step 1: generate config file
+          jupyter notebook --generate-config
+          --> this command generate a config file here ~/.jupyter/jupyter_notebook_config.py
+  step 2: edit this file and change the following line (chrome is also in a local installation)
+          c.NotebookApp.browser = 'C:/Program Files/Google/Chrome/Application/chrome.exe %s'
+
+ipython nbconvert --to python xxx.ipynb
+
+
+#pandas
+pd.set_option('display.max_columns', None)
+pd.set_optioin('display.expand_frame_repr',False)

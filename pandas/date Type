@@ -1,0 +1,19 @@
+df['variable'].str[0:8]
+pd.to_datetime(df1['variable'], format="%Y. %m")
+
+# pd.date_range(start='2015-07', periods=8, freq='MS') #8 months starting with '2015-07'
+DatetimeIndex(['2015-07-01', '2015-08-01', '2015-09-01', '2015-10-01',
+               '2015-11-01', '2015-12-01', '2016-01-01', '2016-02-01'],
+              dtype='datetime64[ns]', freq='MS')
+              
+# pd.date_range(end='2015-07', periods=8, freq='MS') #8 months ending with '2015-07'
+DatetimeIndex(['2014-12-01', '2015-01-01', '2015-02-01', '2015-03-01',
+               '2015-04-01', '2015-05-01', '2015-06-01', '2015-07-01'],
+              dtype='datetime64[ns]', freq='MS')
+              
+pd.date_range(end='2015-07', periods=8, freq='MS')[::-1] #backward
+pd.date_range(start='2/08/2014', periods=104, freq='-1W-Sat') #used staring date
+
+df['Year_Month'].apply(lambda x: x+ relativedelta(months=+12))
+
+

@@ -7,7 +7,7 @@ import requests
 from bs4 import BeautifulSoup as bs
 import json
 
-url_string = 'https://kosis.kr/openapi/statisticsData.do?method=getList&apiKey=NjQ3YjhiNTQzOGQxZmFjN2Y3MTFlYjJmMGExMjYxZjE=&format=json&jsonVD=Y&userStatsId=algok2/101/DT_1BPA001/2/1/20210117183520&type=StructureSpecific&prdSe=Y&startPrdDe=2066&endPrdDe=2067&version=v2_1'
+url_string = 'https://kosis.kr/openapi/statisticsData.do?method=getList&apiKey=??????????&format=json&jsonVD=Y&userStatsId=??????/101/DT_1BPA001/2/1/20210117183520&type=StructureSpecific&prdSe=Y&startPrdDe=2066&endPrdDe=2067&version=v2_1'
 
 url_string.split('&')
 

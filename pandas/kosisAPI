@@ -13,10 +13,10 @@ url_string.split('&')
 
 kosis_url = 'https://kosis.kr/openapi/statisticsData.do'
 kosis_params = {'method':'getList',
-                'apiKey':'NjQ3YjhiNTQzOGQxZmFjN2Y3MTFlYjJmMGExMjYxZjE=',
+                'apiKey':'??????????',
                 'format':'json',
                 'jsonVD':'Y',
-                'userStatsId':'algok2/101/DT_1BPA001/2/1/20210117183520',
+                'userStatsId':'??????/101/DT_1BPA001/2/1/20210117183520',
                 'type':'StructureSpecific',
                 'prdSe':'Y',
                 'startPrdDe':'2065',

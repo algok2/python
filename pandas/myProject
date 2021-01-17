@@ -1,0 +1,44 @@
+from IPython.core.display import display, HTML
+display(HTML("<style>.container {width: 100% !important;}</style>"))
+
+import pandas as pd, numpy as np
+import re
+import requests
+from bs4 import BeautifulSoup as bs
+import json
+
+url_string = 'https://kosis.kr/openapi/statisticsData.do?method=getList&apiKey=NjQ3YjhiNTQzOGQxZmFjN2Y3MTFlYjJmMGExMjYxZjE=&format=json&jsonVD=Y&userStatsId=algok2/101/DT_1BPA001/2/1/20210117183520&type=StructureSpecific&prdSe=Y&startPrdDe=2066&endPrdDe=2067&version=v2_1'
+
+url_string.split('&')
+
+kosis_url = 'https://kosis.kr/openapi/statisticsData.do'
+kosis_params = {'method':'getList',
+                'apiKey':'NjQ3YjhiNTQzOGQxZmFjN2Y3MTFlYjJmMGExMjYxZjE=',
+                'format':'json',
+                'jsonVD':'Y',
+                'userStatsId':'algok2/101/DT_1BPA001/2/1/20210117183520',
+                'type':'StructureSpecific',
+                'prdSe':'Y',
+                'startPrdDe':'2065',
+                'endPrdDe':'2065',
+                'version':'v2_1'}
+
+# 조회조건
+startYear = 2020
+endYear   = 2026
+
+for year in np.r_[startYear:endYear+1:1]:
+    kosis_params['startPrdDe'] = year
+    data_html = requests.get(kosis_url, params = kosis_params)
+    data_json = json.loads(data_html.text)
+    df_all_columns = pd.DataFrame.from_dict(data_json[0], orient="index").T.columns
+    df_columns = [s for s in list(df_all_columns) if not re.match(r".+_ENG$", s)]
+
+    df_temp = pd.DataFrame(columns=df_all_columns)
+
+    for i in range(len(data_json)):
+        temp = pd.DataFrame.from_dict(data_json[i], orient="index").T
+        df_temp = pd.concat([df_temp, temp])
+
+#     df[df_columns]
+    print(df_temp[['PRD_DE','C2_NM','C3_NM']].head(3))

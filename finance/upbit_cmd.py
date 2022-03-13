@@ -10,7 +10,7 @@ upbit = Upbitpy()
 #ticker_list = list(buy_dic.keys())
 
 while True:
-    buy_dic = { line.split()[0] : [int(line.split()[1]), int(line.split()[2])] for line in open("input.txt") }
+    buy_dic = { line.split()[0] : [int(line.split()[2]), float(line.split()[1])] for line in open("input.txt") }
     ticker_list = list(buy_dic.keys())
     
     sum_profit_loss = 0
@@ -25,10 +25,9 @@ while True:
         buy_price = buy_dic.get(code)[0] 
         step_price = curr_price-buy_price
         profit_loss = int(step_price*buy_dic.get(code)[1])
-        print('{:10}\t: {:10,}\t {:10,}\t ({:=+7,})\t [{:=+10,}]'.format(code, curr_price, buy_price, step_price, profit_loss))
+        print('{:10}\t: {:10,}\t {:10,}\t ({:=+8,})\t [{:=+10,}]'.format(code, curr_price, buy_price, step_price, profit_loss))
         sum_profit_loss = int(sum_profit_loss + profit_loss)
     print('-----------------------------------------------------------------------------')
-    print('                                                            SUM : {:=+10,}'.format(sum_profit_loss))
+    print('                                                           SUM : [{:=+10,}]'.format(sum_profit_loss))
     time.sleep(10)
-#     clear_output(wait=True)
 #     clear_output(wait=True)

@@ -1,0 +1,904 @@
+#인증서 및 proxy 관련글
+http://devops.sdsdev.co.kr/confluence/pages/viewpage.action?pageId=97897680
+#.condarc 내용 확인
+proxy_servers:
+  http: http://70.10.15.10:8080
+  https: http://70.10.15.10:8080
+ssl_verify: false
+channels:
+  - conda-forge
+  - defaults
+
+#python 안에서 설정
+import os
+os.environ["HTTP_PROXY"] = "http://70.10.15.10:8080"
+os.environ["HTTPS_PROXY"] = "http://70.10.15.10:8080"
+os.environ["PYTHONHTTPSVERIFY"] = "0"
+#Windows 환경변수도 설정해주어야 함
+set http_proxy=http://70.10.15.10:8080
+set https_proxy=http://70.10.15.10:8080
+
+pip install jupyter --proxy=http://70.10.15.10:8080 --trusted-host pypi.python.org
+pip install jupyter_contrib_nbextensions --proxy=http://70.10.15.10:8080 --trusted-host pypi.python.org
+jupyter notebook --generate-config
+  
+conda install urllib3
+conda install -c https://conda.anaconda.org/conda-forge prompt_toolkit
+conda install mlxtend --channel conda-forge
+conda install selenium -c conda-forge 
+conda install -c plotly plotly=4.9.0
+
+conda config --set proxy_servers.http http://70.10.15.10:8080
+conda config --set proxy_servers.https http://70.10.15.10:8080
+conda config --set ssl_verify False
+conda config --add channels conda-forge
+
+python.exe -m pip install --upgrade --proxy=http://70.10.15.10:8080 --trusted-host pypi.python.org pip
+ 
+pip install (package_name) --proxy http://70.10.15.10:8080 (잠실의 경우) --trusted-host pypi.org --trusted-host files.pythonhosted.org --user 
+pip install keras --proxy=http://70.10.15.10:8080 --trusted-host pypi.python.org 
+pip install openpyxl --proxy=http://70.10.15.10:8080 --trusted-host pypi.python.org
+pip install pyxlsb --proxy=http://70.10.15.10:8080 --trusted-host pypi.python.org
+pip install docx --proxy=http://70.10.15.10:8080 --trusted-host pypi.python.org
+pip install apriori --proxy=http://70.10.15.10:8080 --trusted-host pypi.python.org     #연관성분석
+pip install mlxtend --proxy=http://70.10.15.10:8080 --trusted-host pypi.python.org     #연관성분석
+pip install urllib2 --proxy=http://70.10.15.10:8080 --trusted-host pypi.python.org
+pip install pandas-datareader --proxy=http://70.10.15.10:8080 --trusted-host pypi.python.org
+pip install jupyter_contrib_nbextensions --proxy=http://70.10.15.10:8080 --trusted-host pypi.python.org
+pip install markdown-pdf --proxy=http://70.10.15.10:8080 --trusted-host pypi.python.org
+pip install pandoc --proxy=http://70.10.15.10:8080 --trusted-host pypi.python.org
+pip install pywinauto  --proxy=http://70.10.15.10:8080 --trusted-host pypi.python.org
+pip install pyautoit  --proxy=http://70.10.15.10:8080 --trusted-host pypi.python.org
+pip install pyInspect --proxy=http://70.10.15.10:8080 --trusted-host pypi.python.org
+pip install PyQt-builder --proxy=http://70.10.15.10:8080 --trusted-host pypi.python.org
+pip install PyQt5 --proxy=http://70.10.15.10:8080 --trusted-host pypi.python.org
+pip install pdflatex --proxy=http://70.10.15.10:8080 --trusted-host pypi.python.org
+-pdf 
+pip install PyPDF2 --proxy=http://70.10.15.10:8080 --trusted-host pypi.python.org
+- confluence 
+pip install atlassian-python-api --proxy=http://70.10.15.10:8080 --trusted-host pypi.python.org
+
+jupyter contrib nbextension install --user #jupyter 재시작 필요
+#https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/index.html
+
+#selenium webdriver downloads
+  https://www.selenium.dev/downloads/
+  https://chromedriver.chromium.org/downloads
+  https://googlechromelabs.github.io/chrome-for-testing/
+  https://storage.googleapis.com/chrome-for-testing-public/125.0.6422.141/win64/chromedriver-win64.zip
+  
+#markdown to pdf
+``` shell
+cmd
+chcp 65001
+pandoc README.md -s -o README.pdf 
+```
+https://www.markdowntopdf.com/
+
+#현재 위치에서 jupyter notebook 시작
+jupyter notebook --notebook-dir="%CD%"
+#jupyter qtconsole 시작
+jupyter qtconsole
+# jupyter Windows size 100%
+from IPython.core.display import display, HTML
+display(HTML("<style>.container { width:100% !important; }</style>"))
+pd.set_option('display.max_columns', None) # 모든 컬럼 숨김없이 보기
+pd.set_option('display.expand_frame_repr', False)
+pd.set_option('display.float_format', lambda x: '%.5f' % x) # 소수점 5번째 자리까지만 출력되도록 설정
+pd.options.display.float_format = '{:.3f}'.format # 지수표현 없애기 
+pd.reset_option('display.float_format') #원복하기 
+
+# pd.options.display.float_format = '{:.5f}'.format #+e를 사용하지 않는다.
+df.style.format('{:,}')
+df.style.format('{:,.2f}')
+df.style.set_table_styles([{'props': [('font-size', '9pt'), ('line-height', '100%')]}]).set_properties(**{'text-align': 'left'}) #복합 스타일
+pd.reset_option('all')
+#천단위 "," 표시
+tmp['23년실적(240130)'].apply(lambda x: '{:,}'.format(x))
+# 음수는 빨강색 
+def where_color(df):
+   return np.where(df < 0, 'color: red', 'color: black')
+tmp.style.apply(where_color)   
+
+
+#how to set chrome as default browser for anaconda
+Step 1: To open Anaconda Prompt from the Start Menu and type
+ jupyter notebook --generate-config
+ This command generate the file ~/.jupyter/jupyter_notebook_config.py
+Step 2: Edit this file and change the following line (chrome is also is also in a local installation)
+ c.NotebookApp.browser = 'C:/Program Files/Google/Chrome/Application/chrome.exe %s' #\아님 ㅎㅎ
+
+#기본 packages
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+import statsmodels.regression.linear_model as lm
+from statsmodels.stats.anova import anova_lm
+
+#unimport, unload 하고 싶을 때 
+del package
+
+#import matplotlib.pyplot as plt
+#한글폰트 설정
+#mac ver.
+plt.rc("font",family="AppleGothic")
+
+#window ver.
+plt.rc("font",family="Malgun Gothic")
+
+#마이너스 숫자 설정
+plt.rc("axes",unicode_minus=False)
+
+#Knox login
+import Knox_SSO
+userId = driver.find_element_by_name('userId')
+userId.send_keys(Knox_SSO.knox_id)
+password = driver.find_element_by_name('password')
+password.send_keys(Knox_SSO.knox_password)
+password.submit()
+
+#빨강색 글자 인쇄
+print('\33[31m' + 'Success!' + '\33[0m')
+
+도움말은 shift+tab 을 활용하자 !!
+모든 컬럼 보고 싶을 때: df.iloc[0,].reset_index()
+i = 0
+for j in df_event.columns:
+    print(str(i)+":"+j)
+    i=i+1
+
+[용어]
+ - estimate : 추정(치)
+ - endog & exog
+   . endog. : endogenous variable(s) (i.e. dependent, response, regressand, etc.) http://stats.oecd.org/glossary/detail.asp?ID=794
+   . exog.  : exogenous  variable(s) (i.e. independent, predictor, regressor, etc.)
+
+[pandas에서 바로 사용하는 함수]
+pd.concat([,...,], axis=0)
+
+
+[numpy에서 바로 사용하는 함수] 
+np.r_[1:3,6:9]의 활용   df.iloc[:,np.r_[1:3,6:9]]
+특정 함수 찾기 [s for s in dir(metrics) if "score" in s]
+import os
+[i for i in os.listdir() if ".csv" in i] #.csv가 들어가 있는 파일명을 리스트
+
+import sys
+cj = list(sys.modules.keys())
+[k for k in cj if 'anova' in k]
+
+#Series에서 특정 문자(열)이 포함되어 있으면 필터
+contain_words = ['PM', 'Project Manager', '프로젝트 관리자', '프로젝트관리자']
+def func(x):
+    result = False
+    for i in contain_words:
+        if x.lower().find(i.lower()) >= 0:
+            result = result or True
+    return result
+df[df['이름'].apply(lambda x: func(x))]
+
+
+train 과 test 나누기 : df_train = df.sample(frac=0.7, random_state=123)
+                    df_test  = df.drop(df_train.index)
+
+pd.Series.str.replace(pat=,repl=) 의 활용 pat: pattern, repl: replacement
+
+iloc, loc의 활용
+  . 2번째 이후 컬럼들에 대한 최대값 : df['max'] = df.iloc[:,2:].max(axis = 1)
+  . 2번째 이후 컬럼들에 대한 합   : df['sum'] = df.iloc[:,2:].sum(axis = 1)
+                                       df.iloc[:,2:-1].sum(axis = 1) #뒤에서 하나는 제외
+            df.iloc[:,np.r_[2:]].sum(axis = 1) #뒤에서 하나는 제외
+            
+- 결측치
+  A. 결측치 갯수 
+     (결측치 조건).sum()
+      ex.) (df['BloodPressure'] == 0).sum()
+   df.isna().sum()
+   df.count() returns the number of non-NaN values in each column
+   df.count(axis=1) returns the number of non-NaN values in each row
+  B. NaN 결측치 처리
+     df               = df.fillna(0)
+                        df.fillna(method = 'bfill') #backward
+                     df.fillna(method = 'ffill') #forward
+                     df.fillna(value = {'Sepal.Width':0,'Petal.Length':0}
+                     df.fillna(value = {'Sepal.Width':df['Sepal.Width'].mean(),'Petal.Length':df['Petal.Length'].mean()}
+     df['test']       = df['Sepal.Width'].fillna(df['Sepal.Width'].mean())
+     df.loc[:,'test'] = df['Sepal.Width'].fillna(df['Sepal.Width'].mean())
+	 df.fillna(df.groupby([df.year, df.month]).transform('mean'), inplace=True) ★
+     df[['year','month','atemp']] = df[['year','month','atemp']].fillna(df.groupby([df.year, df.month]).transform('mean')) ★
+  C. NaN이 아닌 결측치
+     df['Petal.Length']       = df['Petal.Length'].replace(1.4, np.nan)
+  df.loc[:,'Petal.Length'] = df['Petal.Length'].replace(1.4, np.nan)
+  D. 결측치 변환
+     dia.loc[dia['BloodPressure'] == 0  ,'BloodPressure'] = np.nan
+  dia.loc[dia['BloodPressure'].isna(),'BloodPressure'] = 0
+
+- 조인
+  df['season_1'] = np.where(df['season'] == 1,1,0)
+  df['season_1'] = np.where(df['season'] == 1,"A","B")
+  df['season_2'] = (df['season'] == 1)+0
+  df_dum = pd.get_dummies(df.iloc[:,1:], columns=['season'], drop_first=True)
+  #join 함수는 인덱스 기반으로 동작하고, merge 함수는 컬럼기반으로 동작하므로, 
+   컬럼이름을 가지고 join함수를 쓰려면, set_index()를 사용해서 인덱스화 한다음에 사용 가능하나 번거러움....
+ 
+- 람다함수 #사용자 정의함수의 light버전, 한번만 쓰고 버릴 때 사용 ㅎㅎ
+  df.groupby('season')['count'].agg(lambda x: round(x.mean()))
+  #lambda <args> : <Return Value> if <condition> else <Return Value if condition is False>
+  #lambda x : True if (x > 10 and x < 20) else False
+   
+  #lambda <args> : <return Value> if <condition> else ( <return value > if <condition> else <return value>)
+  #lambda x : x*2 if x < 10 else (x*3 if x < 20 else x)
+   
+- 날짜 형식
+  aws['TM'] = aws['TM'] + ":00:00"
+  aws['TM'] = pd.to_datetime(aws['TM'])
+  aws['TM'] = pd.to_datetime(aws['TM'], format='%Y-%m-%d %H')
+  aws['TM'] = pd.to_datetime(pd.Series(["2020년 5월 25일"]), format = '%Y년 %m월 %d일')
+  . 두 컬럼간 시간/초 구하기
+  (df["Time_B"]-df["Time_A"]).astype('timedelta64[D]') #날짜, 정수형으로 떨어지므로, 소수점이하까지 구하려면 초를 구한 후 나눠야함.
+  (df["Time_B"]-df["Time_A"]).astype('timedelta64[h]') #시간
+  (df["Time_B"]-df["Time_A"]).astype('timedelta64[m]') #분
+  (df["Time_B"]-df["Time_A"]).astype('timedelta64[s]') #초
+
+  . 숫자형식을 날짜 형식으로
+  # pd.to_datetime(df3['date'].astype('object'), format='%Y%m%d')
+  # datetime.datetime.strptime(str(20230804), '%Y%m%d').weekday()
+  # pd.to_datetime(df3['date'].apply(lambda x: str(x)), format='%Y%m%d')
+  . 텍스트 형식을 날짜 형식으로 
+  from datetime import datetime
+  df['Date'] = pd.to_datetime(df['Date']) # object 타입을 datetime64[ns] 으로 
+  
+  datetime_string = "2021년 12월 31일 13시 35분 42.657813초"
+  datetime_format = "%Y년 %m월 %d일 %H시 %M분 %S.%f초"
+  datetime_result = datetime.strptime(datetime_string, datetime_format)
+  
+- 날짜
+  from dateutil.relativedelta import relativedelta
+
+  from datetime import date
+  import datetime
+  
+  pd.to_datetime(df, unit='D', origin = pd.Timestamp('1900-01-01'))
+  Series.dt ....
+  df['datetime'].dt.year
+  df['datetime'].dt.month
+  df['datetime'].dt.day
+  df['datetime'].dt.week      #From 1 to 52
+  df['datetime'].dt.weekday   #Monday is 0 and Sunday is 6 ★★★
+  df['datetime'].dt.day_name  #Monday, Tuesday, Wednesday ...
+  df['datetime'].dt.dayofweek
+  df['datetime'].dt.quarter
+  df['datetime'].dt.seconds   #날짜를 제외한 시간:분:초 를 초단위로 표시 ★★★
+  df['datetime'].dt.total_seconds() #날짜를 포함한 전체를 초단위로 표시 ★★★
+  pd.to_datetime(df[['YEAR', 'MONTH']].assign(DAY=1))
+  pd.to_datetime(df.YEAR.astype(str) + '/' + df.MONTH.astype(str) + '/01')
+  pd.to_datetime(df['연도'].astype('str')+"/"+df['월'].astype('str')+"/1")
+
+  three_yrs_ago = datetime.now() - relativedelta(years=3)
+  df.index = pd.to_datetime(df.index, yearfirst = True)
+  
+  from datetime import date
+  date(2023, 12, 23).isocalendar() #주차 구하기 
+  #결과: (2023, 51, 6) : 23년 51주차 토(6)요일
+
+- 시간 
+import time
+start = time.time()
+print("hello")
+end = time.time()
+print(end - start)
+  
+- 원소 갯수
+  df['season'].unique()
+  df['season'].value_counts() ★ #nan 값은 제외
+  df['season'].value_counts(normalize=True)
+  round(df['season'].value_counts(normalize=True), 2) ★
+  pd.crosstab(df['season'], df['holiday'])
+  pd.crosstab(df['season'], df['holiday'], normalize = True) #전체 데이터 기준
+  pd.crosstab(df['season'], df['holiday'], normalize = 0)    #행(row) 기준, 한 row를 다 더하면 1 
+  pd.crosstab(df['season'], df['holiday'], normalize = 1)    #열(column) 기준, 한 column을 다 더하면 1
+
+  dia_unique_pair = dia.loc[:,['color','cut']].drop_duplicates()
+  dia_sub = dia.loc[dia['price'] >= 3000, ['color','cut']]
+
+-- 상관분석 
+   pearson 상관분석, 
+   spearman 상관분석
+   from scipy.stats import stats
+   stats.pearsonr(ser1, ser2)
+   elec_melt['HOUR_reg'] = elec_melt['HOUR'].str.replace(pat="X|HR", repl=" ") #"|"는 "또는" 을 의미
+   elec_melt['Price_reg'] = elec_melt['Price'].astype(str).str.replace(pat="[^0-9]", repl=" ") 
+                                              #str 타입으로 강제 변경 
+   elec_melt['Price_reg'] = elec_melt['Price'].str.replace(pat="[^0-9]", repl=" ") #[^0-9]: 숫자를 제외한 나머지
+                                                                                   ex) 1,200원 --> 1200
+   elec_melt['Price_reg'] = elec_melt['Price'].str.replace(pat="[^0-9.]", repl=" ") #[^0-9]: 숫자와 "."을 제외한 나머지
+                                                                                    ex) 1,200.00원 --> 1200.00
+                                                                                 
+																				 
+   #DataFrame 함수를 활용한 상관계수 구하기
+   df.corr(method='pearson')   
+ 
+-- 독립성 검정(카이제곱)
+   ※명목형과 명목형 변수간에 실시하는 검정
+   ※두 (명목형) 변수가 독립인지를 (or 연관이 있는지를) 검정
+   ※표를 입력으로 받는다 (★)
+   from scipy.stats import chi2_contingency
+   tab = pd.crosstab(df["Category_A"],df["Category_B"])
+   stat, p, dof, exp = chi2_contingency(tab, correction=True)
+   $\chi^2$
+   $H_0$
+
+-- t-test (두 집단 검정)
+   from scipy.stats import ttest_1samp #one sample t-test
+   tstat, pvalue = ttest_1samp(df["Sepal.Length"], popmean = 4)
+   
+   from scipy.stats import ttest_rel   #paired sample t-test
+   tstat, pvalue = ttest_rel(df["Sepal.Length"], df["Sepal.Width"])
+   
+   from scipy.stats import ttest_ind  #독립표본 t-test independent sample t-test, 이건 분산도 같이 적어줘야 함
+   tstat, pvalue = ttest_ind(df["Sepal.Length"], df["Sepal.Width"], equal_var=True)
+   from statsmodels.api import stats as sm
+   tstat, pvalue, df = sm.ttest_ind(df["Sepal.Length"], df["Sepal.Width"])
+
+-- ANOVA
+   일원 분산분석(one-way ANOVA): 독립변수 1개, 종속변수 1개
+   이원 분산분석(two-way ANOVA): 독립변수가 2개 이상
+   다원 변량 분산부석(MANOVA): 종속변수가 2개 이상
+
+   A. 일원 분산분석 (one-way ANOVA)
+      SciPy(요약) 라이브러리와 StatModels(상세) 라이브러리가 있음. 
+   #파이썬에서 One-way ANOVA 분석은 scipy.stats이나 statsmodel 라이브러리를 이용해서 할 수 있음, statsmodels 을 사용하면 보다 간편하면서도 깔끔한 결과를 얻을 수 있습니다.
+   from scipy.stats import f_oneway
+   stat, p = f_oneway(df["Sepal.Length"], df["Sepal.Width"], df["Petal.Length"])
+   
+   예제1)
+   from statsmodels.stats.anova import anova_lm #lm: linear models
+   from statsmodels.formula.api import ols      #ols : Ordinary Least Squares
+   df = idf.diamonds
+   formula = "price ~ C(cut)"
+   lm = ols(formula, df).fit()
+   [한줄] anova_lm(ols("price ~ C(cut)", df).fit())
+   ※C() : Categorical data란 의미 임(중요)
+   예제2)
+   df = pd.DataFrame(data, columns=['value', 'treatment'])    
+   # the "C" indicates categorical data
+   model = ols('value ~ C(treatment)', df).fit()
+   print(anova_lm(model))
+     df        sum_sq      mean_sq         F    PR(>F)
+ C(treatment)   2.0  15515.766414  7757.883207  3.711336  0.043589
+ Residual      19.0  39716.097222  2090.320906       NaN       NaN
+   
+   
+   일원 분석분석의 사후 분석(Post Hoc)
+   Tukey's HSD, Duncan's MRT, Scheffes ... 가 있음.
+   
+   from statsmodels.stats.multicomp import pairwise_tukeyhsd as tukey #hsd : Honestly Significant Difference
+   posthoc = pairwise_tukeyhsd(df["price"], df["cut"])
+   posthoc.summary()
+   
+   
+   import statsmodels.api as sm
+   from statsmodels.formula.api import ols
+   formula = 'y ~ X'
+   lm = ols(formula, data=data).fit()
+   table = sm.stats.anova_lm(lm, typ=2) # Type 2 ANOVA DataFrame
+   print(table)
+   
+   B. 이원 ~ 다원 분산분석 --> 시험 범위 밖
+
+-- 시계열
+  A.단순이동평활(SMA: Simple Moving Average)
+    Pandas.Series.rolling(window = number).mean()
+  B.가중이동평활(WMA: Weighted Moving Average)
+  C.단순지수평활(EWMA: Exponential Moving Weighted Average)  
+    Pandas.Series.ewm(alpha = 0.xx).mean()
+
+-- 시계열 분해
+   from statsmodels.tsa.seasonal import seasonal_decompose #TSA : Time Series Analysis
+   to_datetime()  후 set_index()해야 분석 가능
+  A. 가법 모형
+     seasonal_decompose(series, model='additive')
+  B. 승법 모형
+  
+-- 데이터마이닝, 기계학습 (교사학습, 비교사학습, 강화학습)
+   sklearn #sk : scikit
+   ml_metrics #ml : machine learning
+
+-- 군집분석
+   A. 계층적 군집분석 (Hierarchical Clustering)
+      --> 군집명(column)과 Centroid 값을 구할 줄 알아야 한다.
+   from sklearn.cluster import AgglomerativeClustering
+   from scipy.cluster.hierarchy import dendrogram, linkage   
+   from matplotlib import pyplot as plt
+
+   cluster = AgglomerativeClustering(n_clusters= 3, affinity= "euclidean", linkage="ward")
+   model = cluster.fit(X) #X는 TF-IDF Matrix 형태, 즉 group by해서 reset_index()하면 안됨
+   cluster.fit_predict(X)
+   
+   B. 비계층적 군집분석
+   from sklearn.cluster import KMeans
+   from sklearn.metrics import confusion_matrix
+   df = idf.iris_xlsx
+   X = df.loc[:,:"Petal.Width"]
+   kmeans = KMeans(n_clusters = 3)
+   kmeans = kmeans.fit(X)
+   centroids = pd.DataFrame(kmeans.cluster_centers_, columns = X.columns)
+   
+
+
+-- 선형회귀(1)
+   회귀분석 가정 (선형성, 잔차의 정규성, 잔차의 등분산성, 잔차의 독립성)
+   회귀모델의 추정 - OLS (Ordinary Least Squares)
+   MSE: Mean Squared Error
+        metrics.mean_absolte_error()
+   RMSE: Root Mean Square Error
+   MAE : Mean absolute error
+   MAPE: Mean absolute percentage error 
+   결정계수(R^2, coefficient of determination) = SSR/SST
+   Error   : yi-yi^       <-- 실제값에서 추정치를 뺀값
+   residual: yi^-mean(y)  <-- 추정치에서 평균을 뺀값
+   
+   F = MSR/MSE
+   
+   import statsmodels.formula.api as smf
+   formula = 'y ~ X'
+   model = smf.ols(formula, data = X)
+   result = model.fit()
+   print(result.summary()) ★
+   print(result.params)
+   print(result.rsquared)
+   
+   X_test = pd.DataFrame({"column0":"value0",
+                            ...,
+                           columnN":"valueN",})
+   y_pred = result.predict(X_test)
+   
+-- 선형회귀(2)
+   import statsmodels.api as sm
+   X = sm.add_constant(X) ※scikit-learn 패키지와 달리 자동으로 상수항을 만들어주지 않음
+   ols = sm.OLS(y, X)   ※scikit-learn 패키지와 달리 데이터를 미리 주어야 함
+   model = model.fit()
+   print(model.summary())
+
+-- 선형회귀(3)   
+   from sklearn.linear_model import LinearRegression
+   lr = LinearRegression()
+   model = lr.fit()
+   
+   
+- 잔차분석
+- 다중 공선성(Multicollinearity)
+  . 다중 공선성의 문제가 있을 경우, 회귀계수의 분산을 증가시켜 불안정하고 해석하기 어렵게 만든다.
+  . 추정된 회귀계수의 분산이 증가하는 정도를 측정하는 VIF값 확인 필요
+    ※VIF : Variation Inflation Factor
+ 
+ 
+  . OHE (One Hot Encoding)
+    하나의 명목형 변수를 해당 변수의 범주 개수 만큼 새로운 가변수로 변환
+ df_dummy = pd.get_dummies(df, columns = ["cut"])
+ 
+
+-- 로지스틱 회귀
+   승산(Odds) = p/(1-p)
+   승산비(OR, Odds Ratio): np.exp("coef.")
+   정확도(Accuracy):
+   정밀도(Precision):
+   재현률(Recall, Sensitivity):
+   F1 score:
+   ROC Curve (Receiver Operating Characteristic) : 가로축을 Fp(Specificity) 값의 비율로 하고, 세로축을 Tp(Sensitive) 값의 비율로 하여 시작화 한 그래프
+        fpr, tpr, thresholds = roc_cure(Y, pred_prob) #분류값이 아닌 확률값 !!!
+   AUC (Area Under Curve)
+   
+   
+   from sklearn import metrics
+   metrics.accuracy_score(Y, pred)
+   metrics.precision_score(Y, pred)
+   metrics.recall_score(Y, pred)
+   metrics.fbeta_score(Y, pred, beta=1)
+
+   
+   from sklearn.linear_model import LogisticRegression
+   
+   import statsmodels.api as sm
+   X = df.iloc[:,:8] #독립변수
+   Y = df.iloc[:,8]  #종속변수(0,1) (Y/N)
+   lg  = sm.Logit(Y, X)
+   model = lg.fit()
+
+-- KNN(K-Nearest Neighbors) 
+   from sklearn.neighbors import KNeighborsClassifier
+   knn = KNeighborsClassifier(n_neighbors=N)
+   results = knn.fit(train_x, train_y)
+   ans4    = knn.score(test_x, test_y)
+   
+-- 의사결정 나무(Decision Tree)
+   분류나무(Classification Tree)로도 사용할 수 있고, 의사결정 규칙(Decision rule)으로도 사용할 수 있다. 
+   노드(Node): 데이터를 담고 있는 부분
+   A. 불순도(Impurity): 특정 노드에 다양한 범주의 개체가 있는지 측정하는 기준. 엔트로피와 지니계수로 판별
+    A1. 엔트로피(Entropy): 무질서도를 정량화 한 값으로 값이 높을 수록 해당 집단의 특징을 찾기 어려움
+    A2. 지니계수(Gini index): 엔트로피보다 계산이 빠르며, 불순도가 높을 수록 0.5에 가깝고 낮을 수록 0에 가까움
+   B. 가지치기(Pruning): 과적합을 방지하기 위한 방법으로 오차와 규칙기반 정확도를 기준으로 실시
+   
+   from sklearn import tree
+   from sklearn.metrics import confusion_matrix
+   from sklearn.model_selection import train_test_split
+
+   X = df.drop("Class",axis = 1)
+   y = df["Class"]
+   
+   X_train, X_test, y_train, y_test = train_test_split(X, y, test_size= 0.20)
+   clf = tree.DecisionTreeClassifier()
+   clf.fit(X_train, y_train)
+   y_pred = clf.predict(X_test)
+   
+   confusion_matrix(y_test, y_pred)
+   clf.score(X_train, y_train)
+   clf.score(X_test, y_test)
+
+-- 추천
+  . 지지도(Support): 상품 X와 Y를 동시에 구매한 비율
+                   규칙의 중요성 척도
+  . 신뢰도(Confidence): 상품 X를 구매 시 Y를 구매한 비율(조건부 확률)
+                      X 구매시 얼마나 Y 구매로 이어지는 지 확인(규칙의 신뢰도)
+  . 향상도(Lift): 상품 X구매시 임의의 상품을 구입하는 것 대비 Y를 포함하는 경우의 비중
+                X와 Y의 상관성을 확인하는 척도
+
+
+-- tf-idf 
+from sklearn.feature_extraction.text import TfidfVectorizer
+tfidf = TfidfVectorizer(max_features=50)
+df['TFIDF_PRE'] = df['Tokenized'].apply(lambda x: " ".join(x))
+# tfidf.fit_transform()한 값은 array로 변경할 수 있다.★★★★★
+tfidf_df = pd.DataFrame(tfidf.fit_transform(df2['TFIDF_PRE']), columns=['Tfidf'])
+tfidf_df['Tfidf'] = tfidf_df['Tfidf'].apply(lambda x: x.toarray())
+
+#stop words 불러 오기 
+with open('stopwords.txt', 'r')  as f:
+    stopwords = f.readlines()
+
+numpy의 vstack(), hstack() 함수로 벡터들을 행렬로 결합할 수 있다. ★★★★★
+X = np.vstack([i for i in df2_tfidf_train['Tfidf'].values])
+X = np.hstack([df2_tfidf_train['Aboard'].values.reshape(-1, 1), X])
+
+
+## 엑셀 실행하기 
+import subprocess
+EXCEL = r'C:\Program Files\Microsoft Office\Office16\EXCEL.EXE'
+subprocess.Popen([EXCEL, "/t", os.path.join(loc_pjt, loc_files[1])]) #절대경로 사용 
+
+## 엑셀 읽어오기
+import win32com.client as win32
+import pandas as pd
+excel = win32.gencache.EnsureDispatch('Excel.Application')
+excel.Visible = False               #보이게 하려면 True
+excel.DisplayAlerts = False
+wb = excel.Workbooks.Open(filename) #filename 은 열고자 하는 엑셀파일
+ws = wb.Worksheets(1)            #숫자는 열고자하는 워크시트 번호, 1은 맨 처음시트, wb.Worksheets.Count 는 마지막 시트 
+                                 #시트들 이름 보기 [i.Name for i in wb.Worksheets]
+vals = ws.UsedRange.Value
+#wb.Close()
+#excel.Quit()
+df = pd.DataFrame(list(vals))
+#df.columns = df.iloc[0]            
+#df = df.iloc[1:]
+
+#첫번째 행이 컬럼명이 아니면...
+#col_name_line = 1
+#df.columns = df.iloc[col_name_line,]
+#df = df.iloc[col_name_line+1:,]
+#df.columns = pd.io.parsers.base_parser.ParserBase({'names':df.columns, 'usecols':None})._maybe_dedup_names(df.columns)
+
+https://m.blog.naver.com/anakt/221871231549
+
+
+### 새 파일 엑셀 만들기 
+>>> import win32com.client as win32
+>>> excel = win32.Dispatch("Excel.Application")
+>>> wb = excel.Workbooks.Add() #'Sheet1' 이란 이름으로 시트가 추가됨. 
+>>> wb.SaveAs(new_file_path+'/UpdatedSheet.xls')
+
+## xlsb 읽어오기 
+df = pd.read_excel('path_to_file.xlsb', engine='pyxlsb')
+
+##전체 불러오기
+vals = ws.UsedRange.Value
+df = pd.DataFrame(list(vals))
+
+## Range 로 불러 올 때
+# vals = ws.Range('B3:N81')
+# df = pd.DataFrame(list(vals.Value))
+   
+## Unicode
+문자열에서 \xa0 제거 ※&nbsp;
+str = "17\xa0kg on 23rd\xa0June 2021"
+1. unicodedata 사용
+   import unicodedata
+   new_str = unicodedata.normalize("NFKD", str_hard_space)
+2. new_str = str_hard_space.replace(u"\xa0", u" ")
+
+pd.read_csv('./xxx.csv', header=None, names=['column1','column1','column1'], encoding = 'unicode_escape')
+
+pd.read_csv('./xxx.csv', encoding="ISO-8859-1", sep=',') #utf8' codec can't decode byte 0xae in position
+pd.read_csv(',, date_parser=['column name'] ,)
+pd.columns = ['column1','column1','column1']
+df.columns = pd.io.parsers.ParserBase({'names':df.columns})._maybe_dedup_names(df.columns) #컬럼명 중복이 있으면 변경
+df.columns = pd.io.parsers.base_parser.ParserBase({'names':df.columns, 'usecols':None})._maybe_dedup_names(df.columns) #Since Pandas 1.3.0:
+# "AAA"라는 문자가 포함되어 있는 컬럼들
+# [k for k in col_list if "AAA" in k]
+# list(filter(lambda x: "AAA" in x, col_list))
+# pd.Series(df1.columns).str.contains("AAA", case=False, na=False)
+# df1.columns[df1.columns.str.contains("AAA", case=False, na=False)]
+list(df).str.contains("AAA", case=False, na=False)
+for i in ['C','PF','PG','SF','SG']:
+    print(i, data_AB.loc[data_AB['Pos'].str.split('-', expand=True)[0].str.contains(i),'Pos'].unique())
+
+
+import numpy as np
+import scipy.stats as stats
+import matplotlib.pyplot as plt
+import matplotlib inline
+
+x = np.linspace(-5, 5, 101)              # x 정의
+t = x                                    # t 정의
+
+plt.figure(figsize=(10, 6))              # 플롯 사이즈 지정
+
+plt.plot(t, stats.t(30).pdf(t), "r--", label='t(30)')        # t plot 추가       
+plt.plot(x, stats.norm(0, 1).pdf(x), "b", label='N(0, 1)')   # normal plot 추가    
+
+plt.xlabel("x(or t)")                    # x축 레이블 지정
+plt.ylabel("y")                          # y축 레이블 지정
+plt.grid()                               # 플롯에 격자 보이기
+plt.title("t Distribution and Normal Distribution")          # 타이틀 표시
+plt.legend()                             # 범례 표시
+plt.show()                               # 플롯 보이기
+
+set http_proxy=http://70.10.5.10:8080
+set https_proxy=https://70.10.5.20:443
+
+#hex codes for various colors can be found at: http://dmcritchie.mvps.org/excel/colors.htm
+#X11 color names https://en.wikipedia.org/wiki/Web_colors#X11_color_names
+
+df.groupby(by=).agg({'':''})
+groupby 다음에는 reset_index(inplace=True) 사용하자
+df.groupby(["column1"]).size().reset_index(name='counts')
+df.groupby('Platform').filter(lambda x : x['Global_sales'].sum() >= 20000) #filter는 리스트에 대해서 사용하고, DataFrame에서는 column과 index를 선택할 때 사용
+df.sort_values(by=)
+join을 위해서는 pandas에서는 pd.merge(left=,right=,how=,on=) 함수를 사용할 수 있다
+
+## pivot, pivot_table
+pvt_df = pd.pivot_table(df[condition],
+    values=values,
+    index=index,
+    columns=columns,
+    aggfunc='sum',
+    fill_value=None,
+    margins=True,
+    dropna=False,
+    margins_name='All',
+    observed=False)
+pvt__df.loc[:, (slice(None), ['실행(201)','속보(301)'])]	
+pvt_df.columns.get_level_values(0)	
+pvt_df.columns.get_level_values(1)	
+midx = pd.IndexSlice	#MultiIndex 사용		  
+pvt_df.loc[:, midx[["[매출총계]","간접비"],['실행(201)','속보(301)']]]
+
+dfmi.loc[(slice('A1','A3'),slice(None), ['C1','C3']),:]
+tmp.loc[(slice(None),'[한계이익총계]'),:]
+tmp.loc[('본사','SCP')]
+df.loc[('baz', 'two'):('qux', 'one')]
+df.loc[('baz', 'two'):'foo']
+df.swaplevel(0, 1)
+
+
+df.columns = df.columns.swaplevel(0, 1)
+df.sort_index(axis=1, level=0)
+df.columns = df.columns.droplevel()
+
+### Multiindex rename 
+df.columns = pd.MultiIndex.from_tuples(df.set_axis(df.columns.values, axis=1).rename(columns={('a', 'f'): ('a', 'af')}))
+
+df_result.fillna(0).sort_values(('[매출총계]','실행(201)'), ascending=False)
+
+[ANOVA] 분석을 위해 사용되는 모듈 
+from statsmodels.formula.api import ols #OLS : ordinary least squares
+import statsmodels.api as sm
+
+
+anova_lm :  
+Anova table for one or more fitted linear models.
+
+[ANOVA 사후검정]
+from statsmodels.stats.multicomp import pairwise_tukeyhsd
+
+[연관성분석]
+from mlxtend.preprocessing import TransactionEncoder
+from mlxtend.frequent_patterns import apriori, association_rules 
+#mlxtend : machine learning extensions
+
+te = TransactionEncoder()
+te_ary = te.fit(dataset).transform(dataset)
+te_ary = te_ary.astype("int")
+dfx = pd.DataFrame(te_ary, columns=te.columns_)
+
+[t-test]
+from scipy import stats
+
+[Logistic Regression 모델]
+from sklearn.linear_model import LogisticRegression
+lr = LogisticRegression(random_state=1234, solver='newton-cg',penalty='l2', C=100000)
+model = lr.fit(train_data[['X1','X2',...,'Xn']], train_data['Y'])
+pred = model.predict_proba(test_data[['X1','X2',...,'Xn']])
+
+[주성분분석] PCA: Principal component analysis (PCA)
+*특이값 분해(Singular Value Decomposition, SVD) 
+
+###Education ###
+http://bit.ly/sds_py
+
+[String]
+
+
+[List]
+# using set() to remove duplicated from list
+test_list = list(set(test_list))
+
+[날짜]
+# Create date series using numpy and to_timedelta() function
+date_series = date + pd.to_timedelta(np.arange(12), 'D')
+print(date_series)
+  # Date and Time unit codes:
+  Here are the date units:	
+    Code	Meaning
+    Y		year
+    M		month
+    W		week
+    D		day
+  And here are the time units:	
+    Code	Meaning
+    h		hour
+    m		minute
+    s		second
+    ms		millisecond
+    us		microsecond
+    ns		nanosecond
+    ps		picosecond
+    fs		femtosecond
+    as		attosecond
+  #The timedelta64 data type also accepts the string “NAT” in place of the number for a “Not A Time” value.
+
+
+# Create date series using date_range() function
+date_series = pd.date_range('08/10/2019', periods = 12, freq ='D')
+print(date_series)
+
+
+SciPy is a collection of mathematical algorithms and convenience functions built on the NumPy extension of Python.
+statsmodels is a Python module that provides classes and functions for the estimation of many different statistical models, as well as for conducting statistical tests, and statistical data exploration.
+
+[데이터셋]
+from sklearn.datasets import load_iris
+iris = load_iris()
+import statsmodels.api as sm
+data = sm.datasets.get_rdataset("Titanic", package="datasets")
+data = sm.datasets.get_rdataset("Guerry", "HistData").data
+
+[SQL]
+from pandasql import sqldf #conda install pandasql
+
+q = """
+SELECT * 
+FROM csv_OS
+WHERE "3.*CI명" in {0}
+;
+""".format(tuple_li)
+
+sqldf(q, locals())
+
+[IPython]
+ipython nbconvert --to python MyNewProject03.ipynb
+
+import copy
+df1 = copy.deepcopy(csv)
+
+★★★[dBrain]★★★
+#기본
+import os,sys, pandas as pd, numpy as np
+import warnings  
+warnings.filterwarnings(action = 'ignore', category=FutureWarning) #경고 메시지 출력을 막어주는 코드
+warnings.filterwarnings(action = 'ignore', category=DeprecationWarning) #경고 메시지 출력을 막어주는 코드
+#데이터에 대해 y = y.values.ravel() 이렇게 해주는 방법도 있음
+from IPython.core.display import display, HTML
+display(HTML("<style>.container {width: 100% !important;}</style>"))
+
+#setting for proxy
+os.environ["HTTP_PROXY"] = "http://70.10.15.10:8080"
+os.environ["HTTPS_PROXY"] = "http://70.10.15.10:8080"
+os.environ["PYTHONHTTPSVERIFY"] = "0"
+
+sys.path.insert(1, r'C:\myPro\myWork\IRP')
+import Knox_SSO
+
+sys.path.append(r'C:\myPro\myScripts')
+from dBrain import bigdata_code, myKeys
+
+from matplotlib import pyplot as plt
+plt.rc("font",family="Malgun Gothic")
+
+-----------------------------------------------------------------------------
+from matplotlib.pyplot import figure
+figure(num=None, figsize=(8, 6), dpi=80, facecolor='w', edgecolor='k')
+plt.figure(figsize=(1,1))
+
+os.path.dirname(sys.executable)
+site.getuserbase()
+
+df['행정구역(시군구)별'].apply(lambda x: x.replace(" ", "")).to_list()
+
+#깔끔하게 프린트하기
+from tabulate import tabulate
+# displaying the DataFrame
+print(tabulate(df, headers = 'keys', tablefmt = 'psql', floatfmt=(".1f", ".3f"), intfmt=","))
+print(tabulate(list, headers=['솔루션명','301:[매출총계]', '201:[매출총계]']))
+
+#업무에 빈번히 사용하는 기능 
+df['Column'].fillna(0)
+df['Column'].replace(np.nan, 0)
+# replace NaN and -inf values with 0
+df = df.replace([np.nan, -np.inf], 0)  #주의: 계산 결과가 -inf 인 경우, 이전 값이 0이 아닐 수 있다 !!
+df['Column'] = df['Column'].str.replace(pat="[^0-9.]", repl="").astype(float) #[^0-9]: 숫자를 제외한 나머지
+
+### 컬럼에 번호를 부여하여 새로운 컬럼이름으로 변경 
+new_col = []
+for i,j in enumerate(df.columns):
+    new_col.append(str(i)+"."+str(j))
+df.columns = new_col
+
+
+df_pre['과제명'].apply(lambda x: x.replace(u'\x0b',''))
+
+df_pre['과제명'] = df_pre['과제명'].apply(lambda x: x.replace(u'\x0b',''))
+
+driver.save_screenshot("screenshot-1.png")
+driver.switch_to.window(driver.window_handles[0])
+
+# before clicking button to open popup, store the current window handle
+main_window = driver.current_window_handle
+
+# click whatever button it is to open popup
+
+# after opening popup, change window handle
+for handle in driver.window_handles: 
+    if handle != main_window: 
+        popup = handle
+        driver.switch_to.window(popup)
+element.is_displayed():		
+
+#임직원 조회
+https://itrm.sec.samsung.net/irp/irp/view/IRPIdentityService/listEmployees.do?_viewName=listEmployeesPopup
+
+#두 디렉토리 동기화
+from dirsync import sync
+sources = [r'C:\Personal Folder', r'C:\Secure Folder']
+targets = [r'K:\My files\test1', r'K:\My files\test2']
+total = dict(zip(sources, targets))
+for source, target in total.items():
+    sync(source, target, 'sync', purge=False)
+
+# 자주 사용하는 루틴	
+file_0 = r'K:\My files\Project\0.자산점검_24년4월\0.filename.xlsx'
+file_1 = r'K:\My files\Project\0.자산점검_24년4월\1.BMC\BMC_20240613_v1.0.xlsx'
+file_2 = r'K:\My files\Project\0.자산점검_24년4월\2.TOBESOFT\TOBESOFT_20240613_v1.1.xlsx'
+
+file_list = [exem_file, bmc_file, tobesoft_file]	
+
+raw_exem = pd.read_excel(file_list[0])
+raw_bmc = pd.read_excel(file_list[1])
+raw_tobesoft = pd.read_excel(file_list[2])
+
+raw_list = [raw_exem, raw_bmc, raw_tobesoft]
+
+# .pkl 로 저장
+for i, raw in enumerate(raw_list):
+    raw.to_pickle(os.path.splitext(file_list[i])[0]+'.pkl')

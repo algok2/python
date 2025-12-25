@@ -80,8 +80,10 @@ jupyter notebook --notebook-dir="%CD%"
 #jupyter qtconsole 시작
 jupyter qtconsole
 # jupyter Windows size 100%
-from IPython.core.display import display, HTML
-display(HTML("<style>.container { width:100% !important; }</style>"))
+# from IPython.core.display import display, HTML
+# display(HTML("<style>.container { width:100% !important; }</style>"))
+from IPython.display import display, HTML
+display(HTML("<style>:root { --jp-notebook-max-width: 100% !important; }</style>"))
 pd.set_option('display.max_columns', None) # 모든 컬럼 숨김없이 보기
 pd.set_option('display.expand_frame_repr', False)
 pd.set_option('display.float_format', lambda x: '%.5f' % x) # 소수점 5번째 자리까지만 출력되도록 설정
